@@ -1,0 +1,58 @@
+# 备份 keepalived 配置
+- name: backup keepalived.conf
+  shell: cp -a /etc/keepalived/keepalived.conf /etc/keepalived/.keepalived.conf.bak
+  tags:
+    - upgrade
+
+# yum 安装 keepalived
+- name: install keepalived by yum
+  yum:
+    name: keepalived
+    state: latest
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+  tags:
+    - install
+    - upgrade
+
+# 配置 keepalived 主节点
+- name: configurate keepalived
+  template:
+    src: keepalived-{{lb_role}}.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+  notify: restart keepalived
+  tags:
+    - install
+    - upgrade
+
+# 启动 keepalived
+- name: start keepalived
+  service:
+    name: keepalived
+    enabled: true
+    state: started
+  tags:
+    - install
+    - upgrade
+
+# 恢复 keepalived 配置
+- name: recovery keepalived.conf
+  shell: cp -a /etc/keepalived/.keepalived.conf.bak /etc/keepalived/keepalived.conf
+  tags:
+    - rollback
+
+# 停止 keepalived
+- name: stop keepalived
+  service:
+    name: keepalived
+    enabled: true
+    state: stopped
+  tags:
+    - uninstall
+
+# 检查 keepalived 进程
+- name: check status
+  shell: systemctl status keepalived
+  tags:
+    - install
+    - upgrade
+    - rollback

@@ -1,0 +1,13 @@
+---
+### haproxy 配置
+haproxy:
+  maxconn: 600
+  listenPort: 3307
+  backend:
+    - 192.168.1.14:3306
+    - 192.168.1.15:3306
+
+keepalived:
+  routeId: 111
+  interface: eth1
+  vip: 192.168.1.10

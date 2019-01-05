@@ -1,0 +1,70 @@
+# 备份 haproxy 配置
+- name: backup haproxy.cfg
+  shell: cp -a /etc/haproxy/haproxy.cfg /etc/haproxy/.haproxy.cfg.bak
+  tags:
+    - upgrade
+
+# yum 安装 haproxy
+- name: install haproxy by yum
+  yum:
+    name: haproxy
+    state: latest
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+  tags:
+    - install
+    - upgrade
+
+# 配置 haproxy
+- name: configurate haproxy
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    owner: haproxy
+    group: haproxy
+    validate: haproxy -c -f %s
+  notify: restart haproxy
+  tags: 
+    - install
+    - upgrade
+
+# 启动 haproxy
+- name: start haproxy
+  service:
+    name: haproxy
+    enabled: true
+    state: started
+  tags:
+    - install
+    - upgrade
+
+# 停止 haproxy
+- name: stop haproxy
+  service:
+    name: haproxy
+    enabled: false
+    state: stopped
+  tags:
+    - uninstall
+
+# 恢复 haproxy 配置
+- name: recovery haproxy.cfg
+  shell: cp -a /etc/haproxy/.haproxy.cfg.bak /etc/haproxy/haproxy
+  tags:
+    - rollback
+
+# 检查 haproxy 进程
+- name: check status
+  shell: systemctl status haproxy && ss -tnl | grep {{ haproxy.listenPort }}
+  tags:
+    - install
+    - upgrade
+    - rollback
+
+# 卸载 haproxy
+- name: uninstall haproxy by yum
+  yum:
+    name: haproxy
+    state: removed
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+  tags:
+    - uninstall
