@@ -1,11 +1,11 @@
-port {{redis_port}}
+port {{redis.port}}
 cluster-enabled yes
 cluster-config-file nodes.conf
 cluster-node-timeout 5000
 appendonly no
 supervised systemd
 daemonize yes
-dir /var/lib/redis
+dir {{ redis.data_dir }}
 protected-mode no
 pidfile /var/run/redis.pid
-logfile /var/log/redis/redis.log
+logfile {{ redis.log_dir }}/redis.log

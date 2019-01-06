@@ -1,1 +1,4 @@
-redis_port: 6479
+redis:
+  port: 6379
+  data_dir: /appdata/redis # not use "/" in then end
+  log_dir: /appdata/redis # not use "/" in then end
