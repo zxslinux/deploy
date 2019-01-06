@@ -1,9 +1,12 @@
 pipeline {
     agent none
     stages {
-        stage('build') {
+        stage('glone') {
             agent { label 'master' }
             steps { git 'https://github.com/zxslinux/deploy.git' }
+        }
+        stage('build') {
+            agent { label 'master' }
             steps { sh 'cd redis-cluster && bash build.sh 3.2.12' }
         }
     }
