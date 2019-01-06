@@ -1,0 +1,9 @@
+pipeline {
+    agent none
+    stages {
+        stage('build') {
+            agent { master }
+            steps { bash build.sh 3.2.12 }
+        }
+    }
+}
