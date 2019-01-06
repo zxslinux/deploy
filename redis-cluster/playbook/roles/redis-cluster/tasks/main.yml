@@ -1,0 +1,34 @@
+# copy redis 二进制包
+name: copy redis binary files
+copy:
+  src: {{ item }}
+  dest: /usr/local/bin/
+with_items:
+  - redis-sentinel
+  - redis-benchmark
+  - redis-server 
+  - redis-trib.rb
+  - mkreleasehdr.sh
+  - redis-check-aof
+  - redis-check-rdb
+  - redis-cli
+
+# copy systemd 启动脚本
+name: copy reids systemd unit file
+copy:
+  src: redis.service
+  dest: /usr/lib/systemd/system/
+notify: reload systemd
+
+# copy redis 配置文件
+name: copy redis configure
+template:
+  src: redis.conf.j2
+  dest: /etc/redis/redis.conf
+
+# 启动 redis 服务
+name: start redis
+service:
+  name: redis
+  state: started
+  enable: true

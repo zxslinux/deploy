@@ -1,0 +1,9 @@
+# 重载 systemd
+- name: reload systemd
+  shell: systemctl daemon-reload
+
+# 重启 redis 服务
+- name: restart redis
+  service:
+    name: redis
+    state: restarted

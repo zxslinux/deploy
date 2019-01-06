@@ -1,0 +1,34 @@
+Vagrant.configure("2") do |config|
+  config.vm.provision "shell", path: "/opt/vm/init-os.sh"
+  config.vm.define :redis01 do |redis01|
+    redis01.vm.box = "centos7"
+    redis01.vm.hostname = "redis01"
+    redis01.vm.network :private_network, ip: "192.168.1.14"
+  end
+  config.vm.define :redis02 do |redis02|
+    redis02.vm.box = "centos7"
+    redis02.vm.hostname = "redis02"
+    redis02.vm.network :private_network, ip: "192.168.1.15"
+  end
+  config.vm.define :redis03 do |redis03|
+    redis03.vm.box = "centos7"
+    redis03.vm.hostname = "redis03"
+    redis03.vm.network :private_network, ip: "192.168.1.16"
+  end
+  config.vm.define :redis04 do |redis04|
+    redis04.vm.box = "centos7"
+    redis04.vm.hostname = "redis04"
+    redis04.vm.network :private_network, ip: "192.168.1.17"
+  end
+
+  config.vm.define :redis05 do |redis05|
+    redis05.vm.box = "centos7"
+    redis05.vm.hostname = "redis05"
+    redis05.vm.network :private_network, ip: "192.168.1.18"
+  end
+  config.vm.define :redis06 do |redis06|
+    redis06.vm.box = "centos7"
+    redis06.vm.hostname = "redis06"
+    redis06.vm.network :private_network, ip: "192.168.1.19"
+  end
+end
