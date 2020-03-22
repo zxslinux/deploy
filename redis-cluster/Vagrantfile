@@ -1,34 +1,38 @@
 Vagrant.configure("2") do |config|
-  config.vm.provision "shell", path: "/opt/vm/init-os.sh"
+  config.vm.provision "shell", path: "../init-os.sh"
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 512
+    v.cpus = 1
+  end
   config.vm.define :redis01 do |redis01|
     redis01.vm.box = "centos7"
     redis01.vm.hostname = "redis01"
-    redis01.vm.network :private_network, ip: "192.168.1.14"
+    redis01.vm.network :public_network, bridge: "wlp26s0",  ip: "192.168.199.11"
   end
   config.vm.define :redis02 do |redis02|
     redis02.vm.box = "centos7"
     redis02.vm.hostname = "redis02"
-    redis02.vm.network :private_network, ip: "192.168.1.15"
+    redis02.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.199.12"
   end
   config.vm.define :redis03 do |redis03|
     redis03.vm.box = "centos7"
     redis03.vm.hostname = "redis03"
-    redis03.vm.network :private_network, ip: "192.168.1.16"
+    redis03.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.199.13"
   end
   config.vm.define :redis04 do |redis04|
     redis04.vm.box = "centos7"
     redis04.vm.hostname = "redis04"
-    redis04.vm.network :private_network, ip: "192.168.1.17"
+    redis04.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.199.14"
   end
 
   config.vm.define :redis05 do |redis05|
     redis05.vm.box = "centos7"
     redis05.vm.hostname = "redis05"
-    redis05.vm.network :private_network, ip: "192.168.1.18"
+    redis05.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.199.15"
   end
   config.vm.define :redis06 do |redis06|
     redis06.vm.box = "centos7"
     redis06.vm.hostname = "redis06"
-    redis06.vm.network :private_network, ip: "192.168.1.19"
+    redis06.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.199.16"
   end
 end

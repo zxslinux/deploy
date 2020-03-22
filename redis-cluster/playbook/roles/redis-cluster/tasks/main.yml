@@ -5,10 +5,14 @@
   with_items:
     - ruby
     - rubygems
+  tags:
+    - install
 
 # 安装 ruby reids 接口
 - name: install ruby redis
   shell: gem install redis --version 3.3.0
+  tags:
+    - install
 
 # copy redis 二进制包
 - name: copy redis binary files
@@ -25,6 +29,8 @@
     - redis-check-aof
     - redis-check-rdb
     - redis-cli
+  tags:
+    - install
 
 # copy systemd 启动脚本
 - name: copy reids systemd unit file
@@ -32,6 +38,8 @@
     src: redis.service
     dest: /usr/lib/systemd/system/
   notify: reload systemd
+  tags:
+    - install  
 
 # copy redis 配置文件
 - name: copy redis configure
@@ -39,6 +47,8 @@
     src: redis.conf.j2
     dest: /etc/redis.conf
   notify: restart redis
+  tags:
+    - install
 
 # 创建 redis 存储目录和日志目录
 - name: create redir data dir
@@ -49,6 +59,8 @@
   with_items:
     - "{{ redis.data_dir }}"
     - "{{ redis.log_dir }}"
+  tags:
+    - install
 
 # 启动 redis 服务
 - name: start redis
@@ -56,6 +68,8 @@
     name: redis
     state: started
     enabled: true
+  tags:
+    - install
 
 # 创建 ruby 集群
 - name: create redis cluster
@@ -68,3 +82,5 @@
     "{{ groups['redis-cluster'][5] }}:{{ redis.port }}"
   run_once: true
   delegate_to: "{{ groups['redis-cluster'][0] }}"
+  tags:
+    - install
