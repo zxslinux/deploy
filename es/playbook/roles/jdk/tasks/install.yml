@@ -1,0 +1,16 @@
+- name: copy jdk binary package
+  unarchive:
+    src: ../../../3rd_packages/jdk-8u241-linux-x64.tar.gz
+    dest: "{{ jdk.install_path }}"
+    remote_src: no
+
+- name: create link to jdk install path
+  file:
+    src: "{{ jdk.install_path }}/jdk1.8.0_241"
+    dest: "{{ jdk.install_path }}/jdk"
+    state: link 
+
+- name: create jdk profile
+  template:
+    src: jdk.sh.j2
+    dest: /etc/profile.d/jdk.sh

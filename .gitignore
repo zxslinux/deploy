@@ -1,1 +1,4 @@
 **/.vagrant
+**/3rd_packages/*
+*.rpm
+*.tar.gz

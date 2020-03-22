@@ -1,0 +1,4 @@
+---
+### jdk 配置
+jdk:
+  install_path: '/opt'

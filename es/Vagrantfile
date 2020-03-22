@@ -1,0 +1,25 @@
+Vagrant.configure("2") do |config|
+  config.vm.provision "shell", path: "../init-os.sh"
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 2048
+    v.cpus = 1
+  end
+  config.vm.define :es1 do |es1|
+    es1.vm.box = "centos7"
+    es1.vm.hostname = "es1"
+    es1.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.124.221"
+  end
+
+  config.vm.define :es2 do |es2|
+    es2.vm.box = "centos7"
+    es2.vm.hostname = "es2"
+    es2.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.124.222"
+  end
+
+  config.vm.define :es3 do |es3|
+    es3.vm.box = "centos7"
+    es3.vm.hostname = "es3"
+    es3.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.124.223"
+  end
+
+end

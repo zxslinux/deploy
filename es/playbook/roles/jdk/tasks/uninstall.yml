@@ -1,0 +1,9 @@
+- name: delete link to jdk install path
+  file:
+    path: "{{ jdk.install_path }}/jdk1.8.0_241"
+    state: absent 
+
+- name: delete jdk profile
+  file:
+    path: /etc/profile.d/jdk.sh
+    state: absent
