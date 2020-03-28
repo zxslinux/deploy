@@ -1,0 +1,11 @@
+# handlers
+- name: reload es
+  shell: systemctl daemon-reload
+
+- name: restart es
+  service:
+    name: elasticsearch
+    state: restarted
+
+- name: reload sysctl
+  shell: sysctl -p

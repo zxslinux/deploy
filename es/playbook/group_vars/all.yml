@@ -2,3 +2,12 @@
 ### jdk 配置
 jdk:
   install_path: '/opt'
+es:
+  cluster_name: test_cluster
+  hosts: '["192.168.124.221","192.168.124.222","192.168.124.223"]'
+  minimum_master_nodes: 2
+  port: 9200
+  user: 'es'
+  install_path: '/opt'
+  version: '6.8.7'
+  

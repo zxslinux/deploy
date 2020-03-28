@@ -1,0 +1,11 @@
+cluster.name: test_cluster
+node.name: node_{{ inventory_hostname }}
+path.data: node_data_{{ inventory_hostname }}
+http.port: {{ es.port }}
+network.host: {{ inventory_hostname }}
+
+bootstrap.memory_lock: true
+bootstrap.system_call_filter: false
+
+discovery.zen.ping.unicast.hosts: {{ es.hosts }}
+discovery.zen.minimum_master_nodes: {{ es.minimum_master_nodes }}

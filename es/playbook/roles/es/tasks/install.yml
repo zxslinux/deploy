@@ -1,0 +1,40 @@
+- name: create system user
+  user:
+    name: "{{ es.user }}"
+
+- name: create sysctl.conf
+  template:
+    src: sysctl.conf.j2
+    dest: /etc/sysctl.conf
+  notify:
+  - reload sysctl
+
+- name: copy es binary package
+  unarchive:
+    src: ../../../3rd_packages/elasticsearch-{{ es.version }}.tar.gz
+    dest: "{{ es.install_path }}"
+    remote_src: no
+    owner: "{{ es.user }}"
+    group: "{{ es.user }}"
+
+- name: create link to es install path
+  file:
+    src: "{{ es.install_path }}/elasticsearch-{{ es.version }}"
+    dest: "{{ es.install_path }}/es"
+    state: link 
+
+- name: create es systemd service file
+  template:
+    src: elasticsearch.service.j2
+    dest: /usr/lib/systemd/system/elasticsearch.service
+  notify:
+  - reload es
+
+- name: copy elasticsearch.yml file
+  template:
+    src: elasticsearch.yml.j2
+    dest: "{{ es.install_path }}/es/config/elasticsearch.yml"
+  notify:
+  - restart es  
+
+    
