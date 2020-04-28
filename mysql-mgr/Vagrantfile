@@ -1,0 +1,37 @@
+Vagrant.configure("2") do |config|
+  config.vm.provision "shell", path: "../init-os.sh"
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 2048
+    v.cpus = 1
+  end
+  config.vm.define :mgr1 do |mgr1|
+    mgr1.vm.box = "centos7"
+    mgr1.vm.hostname = "mgr1"
+    mgr1.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.124.251"
+  end
+
+  config.vm.define :mgr2 do |mgr2|
+    mgr2.vm.box = "centos7"
+    mgr2.vm.hostname = "mgr2"
+    mgr2.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.124.252"
+  end
+
+  config.vm.define :mgr3 do |mgr3|
+    mgr3.vm.box = "centos7"
+    mgr3.vm.hostname = "mgr3"
+    mgr3.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.124.253"
+  end
+
+  config.vm.define :ha1 do |ha1|
+    ha1.vm.box = "centos7"
+    ha1.vm.hostname = "ha1"
+    ha1.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.124.254"
+  end
+
+  config.vm.define :ha2 do |ha2|
+    ha2.vm.box = "centos7"
+    ha2.vm.hostname = "ha2"
+    ha2.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.124.255"
+  end
+
+end

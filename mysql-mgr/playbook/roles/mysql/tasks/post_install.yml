@@ -1,0 +1,44 @@
+- name: copy secure_setup.sql
+  template:
+    src: secure_setup.sql
+    dest: /root/secure_setup.sql
+  tags:
+    - install
+  when: role=='master'
+
+- name: copy addition_to_sys.sql
+  template:
+    src: addition_to_sys.sql
+    dest: /root/addition_to_sys.sql
+  tags:
+    - install
+  when: role=='master'
+
+- name: exec addition_to_sys.sql
+  shell: /usr/local/mysql/bin/mysql < /root/addition_to_sys.sql
+  when: role=='master'
+
+- name: exec secure setup sql
+  shell: /usr/local/mysql/bin/mysql < /root/secure_setup.sql
+  when: role=='master'
+
+- name: install xinetd
+  yum:
+    name: xinetd
+    state: latest
+
+- name: copy mysql_gr_routing scripts
+  template:
+    src: mysql_gr_routing_check.sh
+    dest: /usr/local/bin/mysql_gr_routing_check.sh
+    mode: 755
+
+- name: copy mysql_gr_routing_check_write/read conf
+  template:
+    src: "{{items}}"
+    dest: /etc/xinetd.d/
+  with_itsm:
+    - "mysql_gr_routing_check_write"
+    - "mysql_gr_routing_check_read"
+  notify:
+    restart xinetd

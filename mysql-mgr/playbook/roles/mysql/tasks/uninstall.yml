@@ -1,0 +1,35 @@
+- name: stop mysqld
+  shell: /etc/init.d/mysqld stop
+
+- name: remove data dir
+  file:
+    path: "{{item}}"
+    state: absent
+  with_items:
+    - "{{mysql.datadir}}"
+    - "{{mysql.logdir}}"
+    - "{{mysql.backupdir}}"
+
+- name: remove mysqld.server file
+  file:
+    path: /etc/init.d/myqld
+    state: absent
+
+- name: stop xinetd
+  service:
+    name: xinetd
+    state: stopped
+
+- name: remove xinetd
+  yum:
+    name: xinetd
+    state: absent
+  
+- name: remove scripts
+  file:
+    path: "{{item}}"
+    state: absent
+  with_items:
+    - "/usr/local/bin/mysql_gr_routing_check.sh"
+    - "/etc/xinetd.d/mysql_gr_routing_check_write"
+    - "/etc/xinetd.d/mysql_gr_routing_check_read"

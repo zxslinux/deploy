@@ -1,0 +1,15 @@
+- name: reload mysqld
+  shell: systemctl daemon-reload
+
+- name: restart mysqld
+  shell: /etc/init.d/mysqld restart
+
+- name: test login
+  service:
+    shell: 'mysql -e "select version()"'
+
+- name: restart xinetd
+  service:
+    name: xinetd
+    state: restarted
+    enabled: yes

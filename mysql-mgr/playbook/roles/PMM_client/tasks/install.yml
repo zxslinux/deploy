@@ -1,0 +1,17 @@
+- name: copy pmm-clent to remote host
+  copy:
+    src: ../../../3rd_packages/pmm-client-1.17.1-1.el7.x86_64.rpm
+    dest: /usr/local/src
+
+- name: install pmm-client
+  yum: 
+    name: /usr/local/src/pmm-client-1.17.1-1.el7.x86_64.rpm
+
+- name: connect to pmm server
+  shell: '/sbin/pmm-admin config --server {{pmm.server}}'
+
+- name: create pmm mysql user
+  shell: /sbin/pmm-admin add mysql:queries --user root --create-user
+
+- name: create 
+  shell: /sbin/pmm-admin add mysql

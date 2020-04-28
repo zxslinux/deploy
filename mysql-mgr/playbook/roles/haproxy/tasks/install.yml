@@ -1,0 +1,27 @@
+# yum 安装 haproxy
+- name: install haproxy by yum
+  yum:
+    name: haproxy
+    state: latest
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+
+# 配置 haproxy
+- name: configurate haproxy
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    owner: haproxy
+    group: haproxy
+    validate: haproxy -c -f %s
+  notify: restart haproxy
+
+# 启动 haproxy
+- name: start haproxy
+  service:
+    name: haproxy
+    enabled: true
+    state: started
+
+# 检查 haproxy 进程
+- name: check status
+  shell: systemctl status haproxy && ss -tnl | grep {{ haproxy.listenPort }}

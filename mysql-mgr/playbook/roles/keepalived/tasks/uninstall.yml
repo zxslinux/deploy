@@ -1,0 +1,13 @@
+# 停止 keepalived
+- name: stop keepalived
+  service:
+    name: keepalived
+    enabled: true
+    state: stopped
+
+# yum 卸载 keepalived
+- name: install keepalived by yum
+  yum:
+    name: keepalived
+    state: absent
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"

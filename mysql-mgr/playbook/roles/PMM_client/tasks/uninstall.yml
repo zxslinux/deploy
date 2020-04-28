@@ -1,0 +1,11 @@
+- name: remove pmm-client 
+  shell: /sbin/pmm-admin remove mysql
+  ignore_errors: yes
+
+- name: uninstall pmm monitor
+  shell: /sbin/pmm-admin uinstall
+
+- name: uninstall  pmm-client
+  yum: 
+    name: pmm-client
+    state: absent

@@ -1,0 +1,7 @@
+- name: start group replication bootstrap
+  script: mgr_setup.sh bootstrap_start
+  when: role=='master'
+
+- name: start group replication
+  script: mgr_setup.sh start
+  when: role=='slave'

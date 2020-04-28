@@ -1,0 +1,5 @@
+# 重启 haproxy
+- name: restart haproxy
+  service:
+    name: haproxy
+    state: restarted

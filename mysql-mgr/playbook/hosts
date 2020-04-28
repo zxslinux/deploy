@@ -1,0 +1,8 @@
+[mgr]
+192.168.124.251 role=master
+192.168.124.252 role=slave
+192.168.124.253 role=slave
+
+[lb]
+192.168.124.254 lb_role=master
+192.168.124.255 lb_role=backup

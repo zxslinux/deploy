@@ -1,0 +1,5 @@
+- include_tasks: install.yml
+  when: do_action == 'install'
+
+- include_tasks: uninstall.yml
+  when: do_action == 'uninstall'

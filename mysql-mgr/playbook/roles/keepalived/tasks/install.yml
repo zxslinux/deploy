@@ -1,0 +1,20 @@
+# yum 安装 keepalived
+- name: install keepalived by yum
+  yum:
+    name: keepalived
+    state: latest
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+
+# 配置 keepalived
+- name: configurate keepalived
+  template:
+    src: keepalived-{{lb_role}}.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+  notify: restart keepalived
+
+# 启动 keepalived
+- name: start keepalived
+  service:
+    name: keepalived
+    enabled: true
+    state: started

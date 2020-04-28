@@ -1,0 +1,7 @@
+- hosts: mgr
+  remote_user: root
+  tasks: 
+  - name: test
+    template:
+      src: /data/vm/deploy/mysql-mgr/playbook/roles/mysql/templates/my.cnf.j2
+      dest: /tmp

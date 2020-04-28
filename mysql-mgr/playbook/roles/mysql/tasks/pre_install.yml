@@ -1,0 +1,78 @@
+- name: create system user
+  user:
+    name: mysql
+    shell: /sbin/nologin
+  tags:
+    - install
+
+- name: create mysql datadir
+  file:
+    path: "{{item}}"
+    owner: mysql
+    group: mysql
+    state: directory
+  with_items:
+    - "{{mysql.datadir}}"
+    - "{{mysql.logdir}}"
+    - "{{mysql.backupdir}}"    
+  tags:
+    - install
+
+- name: touch error log file
+  file:
+    path: '{{mysql.logdir}}/error.log'
+    owner: mysql
+    group: mysql
+    state: touch  
+  tags:
+    - install
+
+- name: copy mysql binary package
+  unarchive:
+    src: ../../../3rd_packages/mysql-{{mysql.version}}-linux-glibc2.12-x86_64.tar.gz
+    dest: /usr/local/
+    remote_src: no
+  tags:
+    - install
+
+- name: create link to /usr/local/mysql-{{mysql.version}}-linux-glibc2.12-x86_64
+  file:
+    src: mysql-{{mysql.version}}-linux-glibc2.12-x86_64
+    dest: /usr/local/mysql
+    state: link 
+  tags:
+    - install
+
+- name: add PATH environment
+  lineinfile:
+    path: /etc/profile
+    line: 'export PATH=/usr/local/mysql/bin:$PATH'
+  tags:
+    - install
+
+- name: copy my.cnf
+  template:
+    src: my.cnf.j2
+    dest: /etc/my.cnf
+  tags:
+    - install
+    
+
+- name: initialize mysql datadir
+  shell: /usr/local/mysql/bin/mysqld --initialize --initialize-insecure --user=mysql --datadir={{mysql.datadir}} 
+  tags:
+    - install
+
+- name: copy mysqld.server file to /etc/init.d/
+  shell: cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysqld && systemctl daemon-reload
+  tags:
+    - install
+    - upgrade
+  notify:
+    - reload mysqld
+
+- name: start mysqld
+  shell: /etc/init.d/mysqld start && chkconfig mysqld on
+  tags:
+    - install
+

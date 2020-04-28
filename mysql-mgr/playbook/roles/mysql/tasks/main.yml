@@ -1,0 +1,11 @@
+- include_tasks: pre_install.yml
+  when: do_action == 'install'
+
+- include_tasks: mgr.yml
+  when: do_action == 'install'
+
+- include_tasks: post_install.yml
+  when: do_action == 'install'
+
+- include_tasks: uninstall.yml
+  when: do_action == 'uninstall'

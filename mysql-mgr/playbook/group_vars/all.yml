@@ -1,0 +1,32 @@
+---
+### mysql 配置
+cluster_mode: mgr
+
+mgr:
+  group_name: dd81d59e-ee31-4bcc-9a8d-90f00539bd8c
+  group_seeds: 192.168.124.251:33061,192.168.124.252:33061,192.168.124.253:33061
+
+mysql:
+  version: 5.7.26
+  datadir: /appdata/mysql
+  logdir: /applog/mysql
+  backupdir: /backup
+  port: 3306
+  password: '123'
+
+haproxy:
+  maxconn: 600
+  listenPort: 3306
+  backend:
+    - 192.168.124.251:3306
+    - 192.168.124.252:3306
+    - 192.168.124.253:3306
+
+keepalived:
+  routeId: 123456
+  interface: eth1
+  vip: 192.168.124.254
+
+
+pmm:
+  server: '192.168.199.237:80'
