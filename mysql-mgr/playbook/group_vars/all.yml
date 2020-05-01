@@ -1,7 +1,5 @@
 ---
-### mysql 配置
-cluster_mode: mgr
-
+### mysql group replication 配置
 mgr:
   group_name: dd81d59e-ee31-4bcc-9a8d-90f00539bd8c
   group_seeds: 192.168.124.251:33061,192.168.124.252:33061,192.168.124.253:33061

@@ -1,10 +1,11 @@
+### 准备环境 安装mysql，启动mysql
+# 创建系统用户 mysql 运行mysqld
 - name: create system user
   user:
     name: mysql
     shell: /sbin/nologin
-  tags:
-    - install
 
+# 创建 mysql 数据目录 datadir
 - name: create mysql datadir
   file:
     path: "{{item}}"
@@ -15,54 +16,46 @@
     - "{{mysql.datadir}}"
     - "{{mysql.logdir}}"
     - "{{mysql.backupdir}}"    
-  tags:
-    - install
 
+# 创建 error 日志文件
 - name: touch error log file
   file:
     path: '{{mysql.logdir}}/error.log'
     owner: mysql
     group: mysql
     state: touch  
-  tags:
-    - install
 
+# 分发 mysql 二进制安装包
 - name: copy mysql binary package
   unarchive:
     src: ../../../3rd_packages/mysql-{{mysql.version}}-linux-glibc2.12-x86_64.tar.gz
     dest: /usr/local/
     remote_src: no
-  tags:
-    - install
 
+# 创建软链接执行 mysql 安装目录
 - name: create link to /usr/local/mysql-{{mysql.version}}-linux-glibc2.12-x86_64
   file:
     src: mysql-{{mysql.version}}-linux-glibc2.12-x86_64
     dest: /usr/local/mysql
     state: link 
-  tags:
-    - install
 
+# 添加环境变量
 - name: add PATH environment
   lineinfile:
     path: /etc/profile
     line: 'export PATH=/usr/local/mysql/bin:$PATH'
-  tags:
-    - install
 
+# 分发 mysql 配置文件 my.cnf
 - name: copy my.cnf
   template:
     src: my.cnf.j2
     dest: /etc/my.cnf
-  tags:
-    - install
     
-
+# 初始化 mysql 数据目录(登录空密码方便部署)
 - name: initialize mysql datadir
   shell: /usr/local/mysql/bin/mysqld --initialize --initialize-insecure --user=mysql --datadir={{mysql.datadir}} 
-  tags:
-    - install
 
+# 创建 mysql 启动脚本 /etc/init.d/mysqld
 - name: copy mysqld.server file to /etc/init.d/
   shell: cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysqld && systemctl daemon-reload
   tags:
@@ -71,8 +64,6 @@
   notify:
     - reload mysqld
 
+# 启动 mysql 实例，添加开机自启动
 - name: start mysqld
   shell: /etc/init.d/mysqld start && chkconfig mysqld on
-  tags:
-    - install
-

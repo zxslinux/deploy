@@ -1,7 +1,51 @@
+###  用于部署启动 mysql group replication 创建复制用户，单主模式，添加可写检测脚本
+# 调用脚本启动 启动主节点
 - name: start group replication bootstrap
   script: mgr_setup.sh bootstrap_start
   when: role=='master'
 
+# 调用脚本启动 所有非主节点
 - name: start group replication
   script: mgr_setup.sh start
   when: role=='slave'
+
+# 复制 创建检查集群状态的view 的 SQL 脚本
+- name: copy addition_to_sys.sql
+  copy:
+    src: addition_to_sys.sql
+    dest: /root/addition_to_sys.sql
+  when: role=='master'
+
+# 创建检查集群状态的view 参考: https://github.com/lefred/mysql_gr_routing_check/blob/master/addition_to_sys.sql 
+- name: exec addition_to_sys.sql
+  shell: /usr/local/mysql/bin/mysql < /root/addition_to_sys.sql
+  when: role=='master'
+
+# 安装 xinetd 服务
+- name: install xinetd
+  yum:
+    name: xinetd
+    state: latest
+
+# 复制 mysql 检查可写状态脚本 参考: https://github.com/lefred/mysql_gr_routing_check  注意: 有bug参考 issues #1
+- name: copy mysql_gr_routing scripts
+  copy:
+    src: mysql_gr_routing_check.sh
+    dest: /usr/local/bin/mysql_gr_routing_check.sh
+    mode: 755
+
+# 在/etc/services 文件中添加对应服务
+- name: add someline to /etc/services
+  lineinfile:
+    path: /etc/services
+    line: 'mysql_gr_routing_check_write 6446/tcp # MySQL Group Replication'
+
+# 复制 xinetd 配置文件 参考: https://github.com/lefred/mysql_gr_routing_check 
+- name: copy mysql_gr_routing_check_write/read conf
+  copy:
+    src: "{{item}}"
+    dest: /etc/xinetd.d/
+  with_items:
+    - "mysql_gr_routing_check_write"
+  notify:
+    restart xinetd
