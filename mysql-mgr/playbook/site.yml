@@ -1,6 +1,9 @@
 - hosts: mgr
   roles:
     - mysql
-#    - PMM_client
-#    - haproxy
-#    - keepalived
+#     - PMM_client
+
+- hosts: lb
+  roles:
+    - haproxy
+    - keepalived

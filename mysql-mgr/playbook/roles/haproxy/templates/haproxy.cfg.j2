@@ -29,16 +29,8 @@ defaults
     timeout check           10s
     maxconn                 {{ haproxy.maxconn }}
 
-listen mariadb-cluster
-    bind 0.0.0.0:{{ haproxy.listenPort }}
-    mode tcp
-    option mysql-check user haproxy
-    option tcplog
-    balance leastconn
-
-
 frontend mysql-gr-front_write
-    bind *:3307
+    bind *:3306
     mode tcp
     default_backend mysql-gr-back_write
 
@@ -46,23 +38,12 @@ backend mysql-gr-back_write
     mode tcp
     balance leastconn
     option httpchk
-    {% for host in groups['lb'] %}
-        server {{ host }} {{ host }}:3306 check port 6446 inter 1000 rise 1 fall 2  {%if%} }    
+    {% for host in groups['mgr'] %}
+        server {{ host }} {{ host }}:3306 check port 6446 on-marked-up shutdown-backup-sessions {% if loop.first != true %}backup{% endif %}   
     {% endfor%}
 
-    server mysql1 10.206.131.63:3306 check port 6446 inter 1000 rise 1 fall 2 on-marked-up shutdown-backup-sessions
-    server mysql2 10.206.131.132:3306 check port 6446 inter 1000 rise 1 fall 2 backup
-    server mysql3 10.206.131.156:3306 check port 6446 inter 1000 rise 1 fall 2 backup
-
-frontend mysql-gr-front_read
-    bind *:3308
-    mode tcp
-    default_backend mysql-gr-back_read
-
-backend mysql-gr-back_read
-    mode tcp
-    balance leastconn
-    option httpchk
-    server mysql1 10.206.131.63:3306 check port 6447 inter 1000 rise 1 fall 2
-    server mysql2 10.206.131.132:3306 check port 6447 inter 1000 rise 1 fall 2
-    server mysql3 10.206.131.156:3306 check port 6447 inter 1000 rise 1 fall 2
+listen stats
+    mode http
+    bind *:9000
+    stats enable
+    stats uri /

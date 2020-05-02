@@ -1,8 +1,8 @@
 ### 用于安装后执行
 # 分发 安全设置脚本
 - name: copy secure_setup.sql
-  copy:
-    src: secure_setup.sql
+  template:
+    src: secure_setup.sql.j2
     dest: /root/secure_setup.sql
   tags:
     - install

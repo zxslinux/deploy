@@ -4,5 +4,5 @@
 192.168.124.253 role=slave
 
 [lb]
-192.168.124.254 lb_role=master
-192.168.124.255 lb_role=backup
+192.168.124.241 lb_role=master
+192.168.124.242 lb_role=backup

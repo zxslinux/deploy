@@ -1,7 +1,7 @@
-- hosts: mgr
+- hosts: lb
   remote_user: root
   tasks: 
   - name: test
     template:
-      src: /data/vm/deploy/mysql-mgr/playbook/roles/mysql/templates/my.cnf.j2
+      src: /data/vm/deploy/mysql-mgr/playbook/roles/haproxy/templates/haproxy.cfg.j2
       dest: /tmp

@@ -25,13 +25,13 @@ Vagrant.configure("2") do |config|
   config.vm.define :ha1 do |ha1|
     ha1.vm.box = "centos7"
     ha1.vm.hostname = "ha1"
-    ha1.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.124.254"
+    ha1.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.124.241"
   end
 
   config.vm.define :ha2 do |ha2|
     ha2.vm.box = "centos7"
     ha2.vm.hostname = "ha2"
-    ha2.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.124.255"
+    ha2.vm.network :public_network, bridge: "wlp26s0", ip: "192.168.124.242"
   end
 
 end

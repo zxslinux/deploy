@@ -17,13 +17,13 @@ haproxy:
   listenPort: 3306
   backend:
     - 192.168.124.251:3306
-    - 192.168.124.252:3306
+    - 192.168.124.252:3306 
     - 192.168.124.253:3306
 
 keepalived:
-  routeId: 123456
+  routeId: 121  # must be between 1 & 255
   interface: eth1
-  vip: 192.168.124.254
+  vip: 192.168.124.243
 
 
 pmm:
